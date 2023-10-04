@@ -21,7 +21,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     Serializer for user registration.
 
     """
-
     class Meta:
         model = CustomUser
         fields = ("id", "username", "email", "password")
@@ -72,30 +71,6 @@ class UserLoginSerializer(serializers.Serializer):
     """
     email = serializers.CharField()
     password = serializers.CharField(write_only=True)
-
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError(
-                "Password must be at least 8 characters long.")
-
-        if not any(char.isupper() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one uppercase letter.")
-
-        if not any(char.islower() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one lowercase letter.")
-
-        if not any(char.isdigit() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one digit.")
-
-        special_characters = "!@#$%^&*()_+{}[]:;<>,.?~\\-"
-        if not any(char in special_characters for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one special character.")
-
-        return value
 
     def validate(self, data):
         user = authenticate(**data)
